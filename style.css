@@ -342,6 +342,31 @@ input::placeholder { color: var(--text-dim); }
 .text-center { text-align: center; }
 .divider { height: 1px; background: var(--border); margin: 16px 0; }
 
+/* Balance tabs */
+.balance-tabs {
+  display: flex;
+  background: var(--bg-input);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 12px;
+}
+.balance-tab {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.balance-tab.active {
+  background: var(--green-dark);
+  color: #fff;
+}
+
 /* Compact detail view */
 .section-title-compact {
   font-size: 12px;

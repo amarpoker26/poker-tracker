@@ -439,6 +439,8 @@ function endSession() {
 }
 
 // ── Balances Page ──
+let balancesTab = 'outstanding';
+
 function renderBalances() {
   const sessions = getSessions().filter(s => s.settled);
   const el = document.getElementById('balances-content');
@@ -456,7 +458,14 @@ function renderBalances() {
     }
   });
 
-  let html = `<div class="section-title">Cumulative P&L</div>`;
+  // Tab switcher
+  let html = `<div class="balance-tabs">
+    <button class="balance-tab ${balancesTab === 'outstanding' ? 'active' : ''}" onclick="switchBalancesTab('outstanding')">Outstanding</button>
+    <button class="balance-tab ${balancesTab === 'settled' ? 'active' : ''}" onclick="switchBalancesTab('settled')">Settled</button>
+  </div>`;
+
+  // Cumulative P&L always visible
+  html += `<div class="section-title">Cumulative P&L</div>`;
   const sorted = Object.entries(cumulative).sort((a, b) => b[1] - a[1]);
   sorted.forEach(([p, net]) => {
     html += `<div class="list-item">
@@ -465,25 +474,46 @@ function renderBalances() {
     </div>`;
   });
 
-  // Overall minimum transfers
-  const balances = sorted.map(([player, balance]) => ({ player, balance }));
-  const transfers = minimumTransfers(balances);
-
-  html += `<div class="section-title">Outstanding Settlements</div>`;
-  if (!transfers.length) {
-    html += `<p style="color:var(--text-dim)">Everyone is settled up!</p>`;
+  if (balancesTab === 'outstanding') {
+    const balances = sorted.map(([player, balance]) => ({ player, balance }));
+    const transfers = minimumTransfers(balances);
+    html += `<div class="section-title">Outstanding Settlements</div>`;
+    if (!transfers.length) {
+      html += `<p style="color:var(--text-dim)">Everyone is settled up!</p>`;
+    } else {
+      transfers.forEach(t => {
+        html += `<div class="settlement-item">
+          <span>${esc(t.from)}</span>
+          <span class="settlement-arrow">→ ${usd(t.amount)} →</span>
+          <span>${esc(t.to)}</span>
+        </div>`;
+      });
+    }
   } else {
-    transfers.forEach(t => {
-      html += `<div class="settlement-item">
-        <span>${esc(t.from)}</span>
-        <span class="settlement-arrow">→ ${usd(t.amount)} →</span>
-        <span>${esc(t.to)}</span>
-      </div>`;
+    html += `<div class="section-title">Settled Sessions</div>`;
+    sessions.slice().reverse().forEach(s => {
+      const result = calculateSession(s);
+      html += `<div class="card" style="padding:12px;margin-bottom:8px">
+        <div style="font-weight:600;color:var(--gold);margin-bottom:6px">${formatDate(s.date)}</div>`;
+      result.transfers.forEach(t => {
+        html += `<div style="font-size:13px;padding:2px 0;color:var(--text-dim)">
+          ${esc(t.from)} → ${usd(t.amount)} → ${esc(t.to)}
+        </div>`;
+      });
+      if (!result.transfers.length) {
+        html += `<div style="font-size:13px;color:var(--text-dim)">Even split</div>`;
+      }
+      html += `</div>`;
     });
   }
 
   html += `<p style="color:var(--text-dim);font-size:12px;margin-top:16px;text-align:center">Across ${sessions.length} settled session${sessions.length !== 1 ? 's' : ''}</p>`;
   el.innerHTML = html;
+}
+
+function switchBalancesTab(tab) {
+  balancesTab = tab;
+  renderBalances();
 }
 
 // ── Modal ──
