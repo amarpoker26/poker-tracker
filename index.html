@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Poker">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='90' fill='%231a5c2a'/><text x='256' y='340' text-anchor='middle' font-size='280' fill='%23d4af37'>♠</text></svg>">
+  <title>Poker Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- TAB: Sessions -->
+  <div id="page-sessions" class="page active">
+    <div class="header">
+      <h1>Sessions</h1>
+    </div>
+    <div id="sessions-list"></div>
+  </div>
+
+  <!-- TAB: New Session -->
+  <div id="page-new" class="page">
+    <div class="header">
+      <h1 id="new-session-title">New Session</h1>
+      <button class="header-action" id="btn-end-session" style="display:none">End Session</button>
+    </div>
+    <div id="new-session-content"></div>
+  </div>
+
+  <!-- TAB: Players -->
+  <div id="page-players" class="page">
+    <div class="header">
+      <h1>Players</h1>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <input type="text" id="new-player-name" placeholder="Player name" style="flex:1">
+      <button class="btn btn-primary btn-sm" onclick="addPlayer()">Add</button>
+    </div>
+    <div id="players-list"></div>
+  </div>
+
+  <!-- TAB: Balances -->
+  <div id="page-balances" class="page">
+    <div class="header">
+      <h1>Balances</h1>
+    </div>
+    <div id="balances-content"></div>
+  </div>
+
+  <!-- Session Detail (overlay page) -->
+  <div id="page-detail" class="page">
+    <div class="header">
+      <button class="header-action" onclick="closeDetail()" style="color:var(--text)">← Back</button>
+      <button class="header-action" id="btn-delete-session" style="color:var(--red)">Delete</button>
+    </div>
+    <div id="detail-content" class="session-detail"></div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <button class="tab active" data-tab="sessions">
+      <span class="tab-icon">♠</span>
+      Sessions
+    </button>
+    <button class="tab" data-tab="new">
+      <span class="tab-icon">+</span>
+      New
+    </button>
+    <button class="tab" data-tab="players">
+      <span class="tab-icon">♣</span>
+      Players
+    </button>
+    <button class="tab" data-tab="balances">
+      <span class="tab-icon">♦</span>
+      Balances
+    </button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
